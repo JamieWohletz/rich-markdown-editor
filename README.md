@@ -168,7 +168,7 @@ This callback is triggered when the user gains focus on the editor contenteditab
 associated UI elements such as the block menu or floating toolbars. If you want to listen
 for focus events on _only_ the contenteditable area then use `handleDOMEvents` props.
 
-#### `onSave({ done: boolean }): void`
+#### `onSave({ value: string }): void`
 
 This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
 

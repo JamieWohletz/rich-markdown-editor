@@ -137,7 +137,7 @@ export type Props = {
   uploadImage?: (file: File) => Promise<string>;
   onBlur?: () => void;
   onFocus?: () => void;
-  onSave?: ({ done: boolean }) => void;
+  onSave?: ({ value: string }) => void;
   onCancel?: () => void;
   onChange?: (value: () => string) => void;
   onImageUploadStart?: () => void;
@@ -198,7 +198,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     emojiMenuOpen: false,
   };
 
-  isBlurred: boolean;
   extensions: ExtensionManager;
   element?: HTMLElement | null;
   view: EditorView;
@@ -260,32 +259,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (prevProps.dir !== this.props.dir) {
       this.calculateDir();
-    }
-
-    if (
-      !this.isBlurred &&
-      !this.state.isEditorFocused &&
-      !this.state.blockMenuOpen &&
-      !this.state.linkMenuOpen &&
-      !this.state.selectionMenuOpen
-    ) {
-      this.isBlurred = true;
-      if (this.props.onBlur) {
-        this.props.onBlur();
-      }
-    }
-
-    if (
-      this.isBlurred &&
-      (this.state.isEditorFocused ||
-        this.state.blockMenuOpen ||
-        this.state.linkMenuOpen ||
-        this.state.selectionMenuOpen)
-    ) {
-      this.isBlurred = false;
-      if (this.props.onFocus) {
-        this.props.onFocus();
-      }
     }
   }
 
@@ -617,14 +590,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   handleSave = () => {
     const { onSave } = this.props;
     if (onSave) {
-      onSave({ done: false });
+      onSave({ value: this.value() });
     }
   };
 
   handleSaveAndExit = () => {
     const { onSave } = this.props;
     if (onSave) {
-      onSave({ done: true });
+      onSave({ value: this.value() });
     }
   };
 
@@ -760,6 +733,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
+              onBlur={() => {
+                if (this.props.onBlur) {
+                  this.props.onBlur();
+                }
+              }}
+              onFocus={() => {
+                if (this.props.onFocus) {
+                  this.props.onFocus();
+                }
+              }}
             />
             {!readOnly && this.view && (
               <React.Fragment>
