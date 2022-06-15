@@ -6,7 +6,6 @@ import {
   deleteColumn,
   deleteRow,
   deleteTable,
-  fixTables,
   goToNextCell,
   isInTable,
   setCellAttr,
@@ -94,7 +93,6 @@ export default class Table extends Node {
       toggleHeaderRow: () => toggleHeaderRow,
       toggleHeaderCell: () => toggleHeaderCell,
       setCellAttr: () => setCellAttr,
-      fixTables: () => fixTables,
     };
   }
 
@@ -129,7 +127,7 @@ export default class Table extends Node {
       tableEditing(),
       new Plugin({
         props: {
-          decorations: state => {
+          decorations: (state) => {
             const { doc } = state;
             const decorations: Decoration[] = [];
             let index = 0;
