@@ -18,7 +18,7 @@ function normalizePastedMarkdown(text: string): string {
   const CHECKBOX_REGEX = /^\s?(\[(X|\s|_|-)\]\s(.*)?)/gim;
 
   while (text.match(CHECKBOX_REGEX)) {
-    text = text.replace(CHECKBOX_REGEX, match => `- ${match.trim()}`);
+    text = text.replace(CHECKBOX_REGEX, (match) => `- ${match.trim()}`);
   }
 
   return text;
@@ -134,6 +134,9 @@ export default class PasteHandler extends Extension {
               const paste = this.editor.pasteParser.parse(
                 normalizePastedMarkdown(text)
               );
+              if (!paste) {
+                return false;
+              }
               const slice = paste.slice(0);
 
               const transaction = view.state.tr.replaceSelection(slice);
